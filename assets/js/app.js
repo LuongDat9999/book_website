@@ -39,6 +39,20 @@ async function loadArticles() {
   const data = await response.json();
   if (data.length) articles = data.map(article => ({ id:article.id, title:article.title, type:article.article_type, text:article.excerpt, image:article.image_url || 'assets/img/article-1.svg' }));
 }
+async function loadAboutFacts() {
+  const headers = { apikey: SUPABASE_ANON_KEY, Authorization: `Bearer ${SUPABASE_ANON_KEY}` };
+  const [booksResponse, articlesResponse] = await Promise.all([
+    fetch(`${SUPABASE_URL}/rest/v1/books?select=id,author,publisher,publication_year,reference_price,cover_url,short_description`, { headers }),
+    fetch(`${SUPABASE_URL}/rest/v1/articles?select=id&published=eq.true`, { headers })
+  ]);
+  if (!booksResponse.ok || !articlesResponse.ok) throw new Error('Không thể tải thống kê giới thiệu.');
+  const [bookRows, articleRows] = await Promise.all([booksResponse.json(), articlesResponse.json()]);
+  const completeBooks = bookRows.filter(book => [book.author, book.publisher, book.publication_year, book.reference_price, book.cover_url, book.short_description].every(Boolean)).length;
+  const completion = bookRows.length ? Math.round((completeBooks / bookRows.length) * 100) : 0;
+  $('#bookFactValue').textContent = bookRows.length;
+  $('#articleFactValue').textContent = articleRows.length;
+  $('#completeFactValue').textContent = `${completion}%`;
+}
 function renderBooks() {
   const query = normalizeText($('#bookSearch').value);
   const category = $('#categoryFilter').value;
@@ -87,6 +101,14 @@ async function init() {
   renderArticles();
   await loadArticles();
   renderArticles();
+  try {
+    await loadAboutFacts();
+  } catch (error) {
+    $('#bookFactValue').textContent = '—';
+    $('#articleFactValue').textContent = '—';
+    $('#completeFactValue').textContent = '—';
+    console.error(error);
+  }
   try {
     await loadBooks();
     books.map(book => book.category).filter((value, index, list) => value && list.indexOf(value) === index).forEach(category => $('#categoryFilter').insertAdjacentHTML('beforeend', `<option>${category}</option>`));
