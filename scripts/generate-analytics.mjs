@@ -1,7 +1,7 @@
 import { BetaAnalyticsDataClient } from '@google-analytics/data';
 import { mkdir, writeFile } from 'node:fs/promises';
 
-const propertyId = process.env.GA4_PROPERTY_ID || '16357193074';
+const propertyId = process.env.GA4_PROPERTY_ID || '449018860';
 const credentialsPath = process.env.GOOGLE_APPLICATION_CREDENTIALS || './credentials.json';
 const analyticsDataClient = new BetaAnalyticsDataClient({ keyFilename: credentialsPath });
 

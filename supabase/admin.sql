@@ -33,7 +33,7 @@ drop policy if exists "Demo can manage admin settings" on public.admin_settings;
 create policy "Demo can manage admin settings" on public.admin_settings for all to anon using (true) with check (true);
 
 insert into public.admin_settings (setting_key, setting_value)
-values ('google_analytics_property_id', '16357193074')
+values ('google_analytics_property_id', '449018860')
 on conflict (setting_key) do update set setting_value = excluded.setting_value, updated_at = now();
 
 create or replace function public.verify_admin(p_username text, p_password text)

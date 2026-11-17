@@ -17,7 +17,7 @@ Script mặc định nhập tối đa 5 sách mỗi lần chạy (`BATCH_SIZE=5`
 
 Báo cáo GA4 được tạo bằng Node.js trong GitHub Actions, không đưa service-account key xuống trình duyệt.
 
-1. Trong GA4 vào **Admin → Property access management**, thêm email `client_email` trong `credentials.json` với quyền **Viewer** cho Property `16357193074`.
-2. Trong GitHub repository vào **Settings → Secrets and variables → Actions**, tạo secret `GA_SERVICE_ACCOUNT_JSON` (hoặc dùng tên cũ `GOOGLE_GA4_CREDENTIALS_JSON`) bằng toàn bộ nội dung JSON của `credentials.json`. `GA_PROPERTY_ID` là tùy chọn; mặc định là `16357193074`.
+1. Trong GA4 vào **Admin → Property access management**, thêm email `client_email` trong `credentials.json` với quyền **Viewer** cho Property `449018860`.
+2. Trong GitHub repository vào **Settings → Secrets and variables → Actions**, tạo secret `GA_SERVICE_ACCOUNT_JSON` (hoặc dùng tên cũ `GOOGLE_GA4_CREDENTIALS_JSON`) bằng toàn bộ nội dung JSON của `credentials.json`. `GA_PROPERTY_ID` là tùy chọn; mặc định là `449018860`.
 3. Chạy workflow **Update GA4 Statistics (Node.js)**. Workflow sẽ tạo `data.json` ở thư mục gốc và tự commit file này; trang quản trị đọc file tĩnh sau khi admin đăng nhập, không cần OAuth trên trình duyệt.
 4. Workflow **Deploy static content to Pages** sẽ triển khai `data.json` lên GitHub Pages. Workflow cập nhật thống kê chạy mỗi 2 giờ; không commit `credentials.json` hoặc private key vào Git.

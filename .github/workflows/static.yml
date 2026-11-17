@@ -42,7 +42,7 @@ jobs:
       - name: Generate Google Analytics report
         env:
           GOOGLE_GA4_CREDENTIALS_JSON: ${{ secrets.GOOGLE_GA4_CREDENTIALS_JSON }}
-          GA4_PROPERTY_ID: "16357193074"
+          GA4_PROPERTY_ID: "449018860"
         run: |
           if [ -z "$GOOGLE_GA4_CREDENTIALS_JSON" ]; then
             echo "GOOGLE_GA4_CREDENTIALS_JSON is not configured; keeping the previous report if one exists."

@@ -1,6 +1,6 @@
 const SUPABASE_URL = 'https://vmtugjuajprsbdyikzqp.supabase.co';
 const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_ob5pZ-I-_YvfeE-9CK9QmA_i8vUP0Hk';
-const DEFAULT_ANALYTICS_PROPERTY = '16357193074';
+const DEFAULT_ANALYTICS_PROPERTY = '449018860';
 const client = supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
 const $ = selector => document.querySelector(selector);
 const escapeHtml = value => String(value ?? '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[char]));
