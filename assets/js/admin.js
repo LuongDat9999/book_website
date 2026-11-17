@@ -39,7 +39,7 @@ function renderAnalyticsReport(report) {
 async function loadAnalyticsReport() {
   const response = await fetch('data.json', { cache:'no-store' });
   if (!response.ok) {
-    $('#analyticsMessage').textContent = 'Chưa có báo cáo GA4. Hãy cấu hình GitHub Secret GA_SERVICE_ACCOUNT_JSON và chạy workflow cập nhật thống kê.';
+    $('#analyticsMessage').textContent = 'Chưa có báo cáo GA4. Hãy chạy workflow Update GA4 Statistics (Node.js). Secret có thể đặt tên GA_SERVICE_ACCOUNT_JSON hoặc GOOGLE_GA4_CREDENTIALS_JSON.';
     return;
   }
   renderAnalyticsReport(await response.json());
