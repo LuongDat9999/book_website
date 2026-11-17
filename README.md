@@ -31,7 +31,8 @@ Mở trang quản trị tại:
 
 Tài khoản đăng nhập được cung cấp riêng cho người chấm hoặc người quản lý website. Không chia sẻ thông tin đăng nhập công khai trong tài liệu hoặc trên mạng xã hội.
 
-Tên đăng nhập hiện tại: `admin`. Mật khẩu được gửi riêng, không ghi trong README để tránh lộ tài khoản quản trị.
+Tên Admin: `admin`. 
+Mật khẩu: lkjh1234@A
 
 Sau khi đăng nhập, có thể sử dụng các khu vực sau:
 
