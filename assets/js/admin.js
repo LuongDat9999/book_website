@@ -28,19 +28,6 @@ async function loadContacts() {
   if (error) throw error;
   $('#contactsTable').innerHTML = `<table class="table"><thead><tr><th>Thời gian</th><th>Khách hàng</th><th>Nội dung</th><th>Trạng thái</th></tr></thead><tbody>${data.map(contact => `<tr><td>${new Date(contact.created_at).toLocaleString('vi-VN')}</td><td><strong>${escapeHtml(contact.name)}</strong><small class="d-block">${escapeHtml(contact.email)}</small></td><td class="contact-message">${escapeHtml(contact.message)}</td><td><select class="status-button status-${escapeHtml(contact.status || 'new')}" data-status="${contact.id}"><option value="new" ${contact.status === 'new' ? 'selected' : ''}>Mới</option><option value="confirmed" ${contact.status === 'confirmed' ? 'selected' : ''}>Đã xác nhận</option><option value="rejected" ${contact.status === 'rejected' ? 'selected' : ''}>Từ chối</option></select></td></tr>`).join('')}</tbody></table>`;
 }
-async function loadAnalyticsSettings() {
-  const { data, error } = await client.from('admin_settings').select('setting_value').eq('setting_key', 'google_analytics_property_id').maybeSingle();
-  if (error) {
-    if (error.code === '42P01') {
-      $('#analyticsProperty').value = DEFAULT_ANALYTICS_PROPERTY;
-      return;
-    }
-    throw error;
-  }
-  const propertyId = data?.setting_value || DEFAULT_ANALYTICS_PROPERTY;
-  $('#analyticsProperty').value = propertyId;
-  localStorage.setItem('mocmien-ga-property', propertyId);
-}
 function renderAnalyticsReport(report) {
   if (Object.hasOwn(report, 'active_users_30_days')) {
     $('#analyticsTable').innerHTML = `<div class="row g-3 mb-4"><div class="col-md-4"><div class="admin-stat"><strong>${Number(report.active_users_30_days || 0).toLocaleString('vi-VN')}</strong><span>Người dùng hoạt động 30 ngày</span></div></div></div><p class="small text-muted">Cập nhật ${new Date(report.updated_at).toLocaleString('vi-VN')}</p>`;
@@ -58,7 +45,7 @@ async function loadAnalyticsReport() {
   renderAnalyticsReport(await response.json());
   $('#analyticsMessage').textContent = '';
 }
-async function refresh() { await Promise.all([loadBooks(), loadArticles(), loadContacts(), loadAnalyticsSettings(), loadAnalyticsReport()]); }
+async function refresh() { await Promise.all([loadBooks(), loadArticles(), loadContacts(), loadAnalyticsReport()]); }
 async function verifyAdmin(username, password) {
   const { data, error } = await client.rpc('verify_admin', { p_username:username, p_password:password });
   if (error) throw error;
@@ -80,16 +67,4 @@ document.addEventListener('change', async event => { const select = event.target
 $('#bookForm').addEventListener('submit', async event => { event.preventDefault(); const form = new FormData(event.target); try { const coverUrl = await uploadImage(form.get('cover')); const payload = { title:form.get('title'), author:form.get('author'), publisher:form.get('publisher'), publication_year:Number(form.get('publication_year')) || null, reference_price:Number(form.get('reference_price')) || 0, category:form.get('category'), cover_url:coverUrl, short_description:form.get('short_description'), source_url:form.get('source_url') || null }; const { error } = await client.from('books').insert(payload); if (error) throw error; event.target.reset(); await loadBooks(); showMessage('Đã thêm sách và tải ảnh lên Storage.'); } catch (error) { showMessage(error.message, 'danger'); } });
 $('#articleForm').addEventListener('submit', async event => { event.preventDefault(); const form = new FormData(event.target); try { const imageUrl = await uploadImage(form.get('image')); const { error } = await client.from('articles').insert({ title:form.get('title'), article_type:form.get('article_type'), excerpt:form.get('excerpt'), content:form.get('content'), image_url:imageUrl }); if (error) throw error; event.target.reset(); await loadArticles(); showMessage('Đã thêm bài viết.'); } catch (error) { showMessage(error.message, 'danger'); } });
 document.querySelectorAll('[data-tab]').forEach(button => button.addEventListener('click', () => { document.querySelectorAll('[data-tab]').forEach(item => item.classList.remove('active')); document.querySelectorAll('.admin-panel').forEach(panel => { panel.hidden = panel.id !== button.dataset.tab; }); button.classList.add('active'); }));
-const analyticsProperty = $('#analyticsProperty');
-if (analyticsProperty) analyticsProperty.value = localStorage.getItem('mocmien-ga-property') || DEFAULT_ANALYTICS_PROPERTY;
-$('#analyticsForm').addEventListener('submit', async event => {
-  event.preventDefault();
-  const propertyId = analyticsProperty.value.trim();
-  if (!/^\d+$/.test(propertyId)) { $('#analyticsMessage').textContent = 'Property ID chỉ gồm chữ số.'; return; }
-  const { error: saveError } = await client.from('admin_settings').upsert({ setting_key:'google_analytics_property_id', setting_value:propertyId, updated_at:new Date().toISOString() }, { onConflict:'setting_key' });
-  if (saveError) { $('#analyticsMessage').textContent = `Không thể lưu Property ID vào database: ${saveError.message}. Hãy chạy supabase/admin.sql trước.`; return; }
-  localStorage.setItem('mocmien-ga-property', propertyId);
-  $('#analyticsMessage').textContent = 'Đã lưu Property ID. Báo cáo mới sẽ được tạo ở lần deploy/workflow tiếp theo.';
-  await loadAnalyticsReport();
-});
 if (sessionStorage.getItem('mocmien-admin-session')) startDashboard().catch(error => { sessionStorage.removeItem('mocmien-admin-session'); $('#loginMessage').textContent = error.message; });
