@@ -1,6 +1,5 @@
 const SUPABASE_URL = 'https://vmtugjuajprsbdyikzqp.supabase.co';
 const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_ob5pZ-I-_YvfeE-9CK9QmA_i8vUP0Hk';
-const GOOGLE_CLIENT_ID = '735686010885-feb3urkl927hn0t3q3grff7vaamcsis9.apps.googleusercontent.com';
 const DEFAULT_ANALYTICS_PROPERTY = '16357193074';
 const client = supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
 const $ = selector => document.querySelector(selector);
@@ -42,7 +41,24 @@ async function loadAnalyticsSettings() {
   $('#analyticsProperty').value = propertyId;
   localStorage.setItem('mocmien-ga-property', propertyId);
 }
-async function refresh() { await Promise.all([loadBooks(), loadArticles(), loadContacts(), loadAnalyticsSettings()]); }
+function renderAnalyticsReport(report) {
+  if (Object.hasOwn(report, 'active_users_30_days')) {
+    $('#analyticsTable').innerHTML = `<div class="row g-3 mb-4"><div class="col-md-4"><div class="admin-stat"><strong>${Number(report.active_users_30_days || 0).toLocaleString('vi-VN')}</strong><span>Người dùng hoạt động 30 ngày</span></div></div></div><p class="small text-muted">Cập nhật ${new Date(report.updated_at).toLocaleString('vi-VN')}</p>`;
+    return;
+  }
+  const totals = report.totals || {};
+  $('#analyticsTable').innerHTML = `<div class="row g-3 mb-4"><div class="col-md-4"><div class="admin-stat"><strong>${Number(totals.activeUsers || 0).toLocaleString('vi-VN')}</strong><span>Người dùng hoạt động</span></div></div><div class="col-md-4"><div class="admin-stat"><strong>${Number(totals.screenPageViews || 0).toLocaleString('vi-VN')}</strong><span>Lượt xem trang</span></div></div><div class="col-md-4"><div class="admin-stat"><strong>${Number(totals.sessions || 0).toLocaleString('vi-VN')}</strong><span>Phiên truy cập</span></div></div></div><p class="small text-muted">Property ${escapeHtml(report.propertyId)} · ${escapeHtml(report.dateRange)} · cập nhật ${new Date(report.generatedAt).toLocaleString('vi-VN')}</p><table class="table"><thead><tr><th>Ngày</th><th>Người dùng</th><th>Lượt xem trang</th><th>Phiên</th></tr></thead><tbody>${(report.rows || []).map(row => `<tr><td>${escapeHtml(row.date)}</td><td>${Number(row.activeUsers || 0).toLocaleString('vi-VN')}</td><td>${Number(row.screenPageViews || 0).toLocaleString('vi-VN')}</td><td>${Number(row.sessions || 0).toLocaleString('vi-VN')}</td></tr>`).join('') || '<tr><td colspan="4">Chưa có dữ liệu.</td></tr>'}</tbody></table>`;
+}
+async function loadAnalyticsReport() {
+  const response = await fetch('data.json', { cache:'no-store' });
+  if (!response.ok) {
+    $('#analyticsMessage').textContent = 'Chưa có báo cáo GA4. Hãy cấu hình GitHub Secret GA_SERVICE_ACCOUNT_JSON và chạy workflow cập nhật thống kê.';
+    return;
+  }
+  renderAnalyticsReport(await response.json());
+  $('#analyticsMessage').textContent = '';
+}
+async function refresh() { await Promise.all([loadBooks(), loadArticles(), loadContacts(), loadAnalyticsSettings(), loadAnalyticsReport()]); }
 async function verifyAdmin(username, password) {
   const { data, error } = await client.rpc('verify_admin', { p_username:username, p_password:password });
   if (error) throw error;
@@ -73,24 +89,7 @@ $('#analyticsForm').addEventListener('submit', async event => {
   const { error: saveError } = await client.from('admin_settings').upsert({ setting_key:'google_analytics_property_id', setting_value:propertyId, updated_at:new Date().toISOString() }, { onConflict:'setting_key' });
   if (saveError) { $('#analyticsMessage').textContent = `Không thể lưu Property ID vào database: ${saveError.message}. Hãy chạy supabase/admin.sql trước.`; return; }
   localStorage.setItem('mocmien-ga-property', propertyId);
-  $('#analyticsMessage').textContent = 'Đang chờ cấp quyền Google...';
-  if (!window.google?.accounts?.oauth2) { $('#analyticsMessage').textContent = 'Google Identity Services chưa sẵn sàng, hãy thử lại sau ít giây.'; return; }
-  let tokenClient;
-  try {
-    tokenClient = google.accounts.oauth2.initTokenClient({ client_id:GOOGLE_CLIENT_ID, scope:'https://www.googleapis.com/auth/analytics.readonly', callback: async response => {
-    if (response.error) { $('#analyticsMessage').textContent = 'OAuth Google bị từ chối. Hãy thêm origin hiện tại vào Authorized JavaScript origins của OAuth client.'; return; }
-    try {
-      const report = await fetch(`https://analyticsdata.googleapis.com/v1beta/properties/${propertyId}:runReport`, { method:'POST', headers:{ Authorization:`Bearer ${response.access_token}`, 'Content-Type':'application/json' }, body:JSON.stringify({ dateRanges:[{ startDate:'30daysAgo', endDate:'today' }], metrics:[{ name:'activeUsers' },{ name:'eventCount' }], dimensions:[{ name:'date' }] }) });
-      if (!report.ok) throw new Error('Google Analytics không trả về dữ liệu. Kiểm tra Property ID và quyền truy cập.');
-      const data = await report.json();
-      const rows = data.rows || [];
-      $('#analyticsTable').innerHTML = `<table class="table"><thead><tr><th>Ngày</th><th>Người dùng hoạt động</th><th>Sự kiện</th></tr></thead><tbody>${rows.map(row => `<tr><td>${row.dimensionValues[0].value}</td><td>${row.metricValues[0].value}</td><td>${row.metricValues[1].value}</td></tr>`).join('') || '<tr><td colspan="3">Chưa có dữ liệu trong khoảng thời gian này.</td></tr>'}</tbody></table>`;
-      $('#analyticsMessage').textContent = 'Đã tải số liệu 30 ngày gần nhất.';
-    } catch (error) { $('#analyticsMessage').textContent = error.message; }
-    }});
-    tokenClient.requestAccessToken({ prompt:'consent' });
-  } catch (error) {
-    $('#analyticsMessage').textContent = `OAuth client chưa đăng ký origin ${location.origin}. Hãy thêm origin này vào Authorized JavaScript origins trên Google Cloud Console.`;
-  }
+  $('#analyticsMessage').textContent = 'Đã lưu Property ID. Báo cáo mới sẽ được tạo ở lần deploy/workflow tiếp theo.';
+  await loadAnalyticsReport();
 });
 if (sessionStorage.getItem('mocmien-admin-session')) startDashboard().catch(error => { sessionStorage.removeItem('mocmien-admin-session'); $('#loginMessage').textContent = error.message; });

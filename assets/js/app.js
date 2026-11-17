@@ -39,7 +39,6 @@ async function loadArticles() {
   const data = await response.json();
   if (data.length) articles = data.map(article => ({ id:article.id, title:article.title, type:article.article_type, text:article.excerpt, image:article.image_url || 'assets/img/article-1.svg' }));
 }
-
 function renderBooks() {
   const query = normalizeText($('#bookSearch').value);
   const category = $('#categoryFilter').value;

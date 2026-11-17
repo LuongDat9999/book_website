@@ -1,0 +1,10 @@
+{
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "generate:analytics": "node scripts/generate-analytics.mjs"
+  },
+  "dependencies": {
+    "@google-analytics/data": "^5.2.0"
+  }
+}

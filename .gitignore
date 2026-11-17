@@ -3,3 +3,6 @@
 !.env.example
 .DS_Store
 client_secret_*.json
+credentials.json
+assets/data/analytics.json
+credentials.json
