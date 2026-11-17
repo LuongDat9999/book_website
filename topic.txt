@@ -1,0 +1,58 @@
+Xây dựng website trong lĩnh vực kinh doanh xuất bản phẩm
+
+1) Thông tin chung và mục tiêu đánh giá
+
+Đề bài và cấu trúc bài thi
+Chủ đề thống nhất: website mô phỏng hoạt động kinh doanh xuất bản phẩm trực tuyến
+Phần B: Sản phẩm website
+8,0 điểm
+•Thiết kế, xây dựng và xuất bản một website hoàn chỉnh ở mức nguyên
+mẫu học tập.
+•Website phải có địa chỉ truy cập công khai trong suốt thời gian chấm bài.
+
+2) Phần B: Website kinh doanh xuất bản phẩm
+Sản phẩm phải thể hiện rõ đối tượng phục vụ và mô hình hoạt động dự kiến
+Yêu cầu cốt lõi
+•Chủ đề: nhà sách, đơn vị phát hành, cửa hàng sách chuyên đề, giới thiệu sách, hoặc nền tảng nội dung số.
+•Người dùng: xác định nhóm khách hàng chính và nhu cầu thông tin của họ.
+•Giá trị cung cấp: nêu rõ sản phẩm, dịch vụ hoặc trải nghiệm mà website giới thiệu.
+•Trạng thái: website đã xuất bản, liên kết công khai.
+
+Phạm vi nguyên mẫu
+•Mô phỏng quy trình giới thiệu, tìm hiểu và gửi yêu cầu mua hoặc liên hệ
+•Có thể dùng biểu mẫu thử nghiệm thay cho chức năng thanh toán thực tế.
+•Không yêu cầu mua tên miền, hosting hoặc tiện ích trả phí. 
+
+3) Khối lượng và chuẩn nội dung
+Tổng tối thiểu: 30 đơn vị nội dung có cơ cấu rõ ràng
+Hạng mục | Số lượng tối thiểu | Chuẩn chất lượng
+Ấn phẩm hoặc sản phẩm | 20 | Ảnh bìa; nhan đề; tác giả; nhà xuất bản; năm; giá tham khảo; mô tả ngắn
+Bài viết chuyên đề | 08 | Tin tức, giới thiệu, review sách, hướng dẫn đọc hoặc nội dung truyền thông
+Video | 02 | Nhúng đúng kỹ thuật; có tiêu đề, mô tả và ghi nguồn
+Nhóm menu ngoài Trang chủ | Ít nhất 05 | Tên rõ nghĩa; phân cấp hợp lý; không có menu rỗng
+Biểu mẫu| 01 | Liên hệ hoặc đặt hàng thử nghiệm; không yêu cầu dữ liệu nhạy cảm
+Trang chính sách | 02 | Bản quyền và quyền riêng tư hoặc điều khoản sử dụng phù hợp nguyên mẫu
+
+
+4) Cấu trúc, chức năng và kiểm thử
+Website phải hoạt động ổn định trên liên kết công khai trước khi nộp
+Cấu trúc tối thiểu
+• Trang chủ
+• Danh mục ấn phẩm hoặc sản phẩm
+• Tin tức, review hoặc góc đọc
+• Giới thiệu đơn vị
+• Liên hệ hoặc đặt hàng thử nghiệm
+• Bản quyền và quyền riêng tư
+Yêu cầu kỹ thuật
+• Điều hướng nhất quán; không có liên kết hỏng hoặc trang rỗng.
+• Hiển thị tốt trên máy tính và điện thoại; chữ, ảnh và nút dễ đọc, dễ thao tác.
+• Ảnh có mô tả thay thế khi nền tảng hỗ trợ; màu chữ và nền đủ tương phản.
+• Có minh chứng thống kê truy cập hoặc trình bày phương án đo lường phù hợp với nền tảng.
+• Kiểm thử liên kết bằng cửa sổ ẩn danh và ít nhất 02 thiết bị hoặc kích thước màn hình.
+
+5) Nền tảng miễn phí khuyến nghị
+
+https://supabase.com/: lưu trữ data
+github page: deploy & tạo link website
+
+
