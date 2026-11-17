@@ -41,18 +41,20 @@ jobs:
 
       - name: Generate Google Analytics report
         env:
-          GOOGLE_GA4_CREDENTIALS_JSON: ${{ secrets.GOOGLE_GA4_CREDENTIALS_JSON }}
+          GA_SERVICE_ACCOUNT_JSON: ${{ secrets.GA_SERVICE_ACCOUNT_JSON || secrets.GOOGLE_GA4_CREDENTIALS_JSON }}
+          GA_PROPERTY_ID: "449018860"
           GA4_PROPERTY_ID: "449018860"
         run: |
-          if [ -z "$GOOGLE_GA4_CREDENTIALS_JSON" ]; then
-            echo "GOOGLE_GA4_CREDENTIALS_JSON is not configured; keeping the previous report if one exists."
+          if [ -z "$GA_SERVICE_ACCOUNT_JSON" ]; then
+            echo "GA service account secret is not configured; keeping the previous reports if they exist."
           else
             # Đảm bảo file credentials.json LUÔN bị xóa kể cả khi lệnh npm bị lỗi
             trap 'rm -f credentials.json' EXIT
 
             npm ci --no-audit --no-fund
-            printf '%s' "$GOOGLE_GA4_CREDENTIALS_JSON" > credentials.json
+            printf '%s' "$GA_SERVICE_ACCOUNT_JSON" > credentials.json
             GOOGLE_APPLICATION_CREDENTIALS=./credentials.json npm run generate:analytics
+            node update_stats.js
           fi
 
       - name: Clean up node_modules before upload
