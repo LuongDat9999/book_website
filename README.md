@@ -1,7 +1,9 @@
 # Mộc Miên Books
 
 Website mô phỏng hoạt động giới thiệu, tìm hiểu và gửi yêu cầu mua sách trực tuyến. Dự án phục vụ nguyên mẫu học tập, không thực hiện thanh toán thật.
+Mở trang website book shop Mộc Miên:
 
+**https://luongdat9999.github.io/book_website/**
 ## Mục tiêu và đối tượng
 
 - Đối tượng: sinh viên, người đi làm và người đọc muốn tìm sách được chọn lọc.
@@ -12,13 +14,13 @@ Website mô phỏng hoạt động giới thiệu, tìm hiểu và gửi yêu c�
 ## Chức năng chính
 
 - Trang chủ và điều hướng đến các khu vực: Sách, Góc đọc, Giới thiệu, Liên hệ.
-- Danh mục tối thiểu 20 sách: ảnh bìa, nhan đề, tác giả, nhà xuất bản, năm xuất bản, giá tham khảo và mô tả ngắn.
+- Danh sách 20 sách: ảnh bìa, nhan đề, tác giả, nhà xuất bản, năm xuất bản, giá tham khảo và mô tả ngắn.
 - Tìm kiếm theo tên/tác giả, lọc thể loại, sắp xếp theo giá hoặc tên.
 - Trang chi tiết sách và trang chi tiết bài viết.
 - Góc đọc gồm tối thiểu 8 bài viết/review.
 - Giỏ hàng mô phỏng: thêm sách, tăng/giảm số lượng, xóa sách và chuyển nội dung sang biểu mẫu yêu cầu mua.
 - Biểu mẫu liên hệ/đặt mua thử nghiệm lưu dữ liệu vào Supabase; không yêu cầu thông tin thanh toán hoặc dữ liệu nhạy cảm.
-- Trang quản trị mẫu để quản lý sách, bài viết, yêu cầu liên hệ và xem báo cáo GA4.
+- Trang quản trị mẫu để quản lý sách, bài viết, yêu cầu liên hệ và xem báo cáo thống kê lượng truy cập GA4.
 - Trang chính sách bản quyền và quyền riêng tư.
 
 ## Hướng dẫn sử dụng trang quản trị
@@ -55,28 +57,11 @@ Trong mục **Đơn đặt / Liên hệ**, người quản trị có thể xem t
 
 Trong mục **Google Analytics**, người quản trị có thể xem:
 
-- Số người dùng hoạt động.
-- Số lượt xem trang.
-- Số phiên truy cập.
-- Số liệu theo từng ngày trong khoảng thời gian báo cáo.
+- Số phiên truy cập trong 30 ngày 
 
-Số liệu được cập nhật tự động từ Google Analytics 4. Nếu chưa có báo cáo, hãy chờ workflow cập nhật dữ liệu hoặc kiểm tra khu vực **Realtime** trong GA4.
-
+Số liệu được cập nhật tự động từ Google Analytics 4 (dữ liệu được cập sau mỗi 2 tiếng do giới hạn về chi phí). 
 Đây là trang quản trị phục vụ nguyên mẫu học tập, không nên dùng để quản lý dữ liệu thương mại thật.
 
-## Công nghệ
-
-- HTML, CSS, JavaScript và Bootstrap.
-- Supabase REST API, Database và Storage.
-- Google Books API dùng ở bước nhập dữ liệu; trình duyệt chỉ đọc sách đã lưu trong Supabase.
-- Google Analytics 4 (GA4) để đo lượt truy cập.
-- GitHub Actions và GitHub Pages để cập nhật báo cáo, triển khai website.
-
-Workflow tạo báo cáo trong `assets/data/analytics.json`; dashboard quản trị đọc file này mà không đưa service-account key xuống trình duyệt.
-
-## Triển khai GitHub Pages
-
-Workflow [static.yml](.github/workflows/static.yml) tự triển khai nội dung khi có push lên nhánh `main`. Có thể chạy thủ công trong tab **Actions**. Sau khi triển khai, lấy URL trong environment `github-pages`.
 
 ## Kiểm thử nghiệm thu
 
@@ -91,6 +76,20 @@ Thực hiện trên URL GitHub Pages trong cửa sổ ẩn danh:
    - Điện thoại: `390x844`.
 6. Kiểm tra ảnh có `alt`, nút có nhãn dễ hiểu, chữ/nền đủ tương phản và không có lỗi 404 trong DevTools.
 7. Mở GA4 Realtime để xác nhận lượt truy cập; đối chiếu báo cáo trong trang quản trị sau khi workflow cập nhật dữ liệu.
+
+## Công nghệ
+
+- HTML, CSS, JavaScript và Bootstrap.
+- Supabase REST API, Database và Storage.
+- Google Books API dùng ở bước nhập dữ liệu; trình duyệt chỉ đọc sách đã lưu trong Supabase.
+- Google Analytics 4 (GA4) để đo lượt truy cập.
+- GitHub Actions và GitHub Pages để cập nhật báo cáo, triển khai website.
+
+Workflow tạo báo cáo trong `assets/data/analytics.json`; dashboard quản trị đọc file này mà không đưa service-account key xuống trình duyệt.
+
+## Triển khai GitHub Pages
+
+Workflow [static.yml](.github/workflows/static.yml) tự triển khai nội dung khi có push lên nhánh `main`. Có thể chạy thủ công trong tab **Actions**. Sau khi triển khai, lấy URL trong environment `github-pages`.
 
 ## Lưu ý bảo mật
 
