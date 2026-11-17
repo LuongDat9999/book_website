@@ -16,7 +16,7 @@ async function uploadImage(file) {
 async function loadBooks() {
   const { data, error } = await client.from('books').select('*').order('id', { ascending:false });
   if (error) throw error;
-  $('#booksTable').innerHTML = `<table class="table"><thead><tr><th>Ảnh</th><th>Tên sách</th><th>Tác giả</th><th>Giá</th><th></th></tr></thead><tbody>${data.map(book => `<tr><td><img src="${escapeHtml(book.cover_url || 'assets/img/favicon.ico')}" alt=""></td><td>${escapeHtml(book.title)}<small class="d-block text-muted">${escapeHtml(book.category || '')}</small></td><td>${escapeHtml(book.author)}</td><td>${Number(book.reference_price || 0).toLocaleString('vi-VN')} ₫</td><td><button class="danger-link" data-delete-book="${book.id}">Xóa</button></td></tr>`).join('')}</tbody></table>` || '<p>Chưa có sách.</p>';
+  $('#booksTable').innerHTML = `<table class="table"><thead><tr><th>Ảnh</th><th>Tên sách</th><th>Tác giả</th><th>Giá</th><th></th></tr></thead><tbody>${data.map(book => `<tr><td><img src="${escapeHtml(book.cover_url || 'assets/img/favicon.ico')}" alt="Bìa sách ${escapeHtml(book.title)}" title="${escapeHtml(book.title)}"></td><td>${escapeHtml(book.title)}<small class="d-block text-muted">${escapeHtml(book.category || '')}</small></td><td>${escapeHtml(book.author)}</td><td>${Number(book.reference_price || 0).toLocaleString('vi-VN')} ₫</td><td><button class="danger-link" data-delete-book="${book.id}">Xóa</button></td></tr>`).join('')}</tbody></table>` || '<p>Chưa có sách.</p>';
 }
 async function loadArticles() {
   const { data, error } = await client.from('articles').select('*').order('id', { ascending:false });

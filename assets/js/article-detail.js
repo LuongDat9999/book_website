@@ -24,6 +24,6 @@ async function loadArticle() {
     article = { ...remoteArticle, type:remoteArticle.article_type, image:remoteArticle.image_url || 'assets/img/article-1.svg' };
   }
   document.title = `${article.title} | Mộc Miên Books`;
-  details.innerHTML = `<article class="mx-auto" style="max-width:850px"><span class="tag">${escapeHtml(article.type)}</span><h1 class="my-3">${escapeHtml(article.title)}</h1><img class="article-detail-image mb-4" src="${escapeHtml(article.image)}" alt="" onerror="this.onerror=null;this.src='assets/img/article-1.svg'"><p class="article-content">${escapeHtml(article.content || article.excerpt)}</p><a class="btn btn-primary mt-3" href="index.html#goc-doc">Quay lại Góc đọc</a></article>`;
+  details.innerHTML = `<article class="mx-auto" style="max-width:850px"><span class="tag">${escapeHtml(article.type)}</span><h1 class="my-3">${escapeHtml(article.title)}</h1><img class="article-detail-image mb-4" src="${escapeHtml(article.image)}" alt="Ảnh bài viết ${escapeHtml(article.title)}" title="${escapeHtml(article.title)}" onerror="this.onerror=null;this.src='assets/img/article-1.svg'"><p class="article-content">${escapeHtml(article.content || article.excerpt)}</p><a class="btn btn-primary mt-3" href="index.html#goc-doc">Quay lại Góc đọc</a></article>`;
 }
 loadArticle().catch(error => { details.innerHTML = `<div class="alert alert-danger">${escapeHtml(error.message)}</div>`; });
